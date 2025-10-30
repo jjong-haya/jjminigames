@@ -1,8 +1,8 @@
 ﻿import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
+import Games from "../pages/Games/Games";
 import Layout from "../components/Layout/Layout";
-import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -11,8 +11,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
-      // 예시 보호 라우트: { path: "play", element: <ProtectedRoute><Play /></ProtectedRoute> }
+      { path: "games", element: <Games /> },
     ],
   },
 ]);
+
 export default router;
