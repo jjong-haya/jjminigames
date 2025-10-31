@@ -15,9 +15,21 @@ export default function Header() {
 
         {/* navbar */}
         <nav className="hidden sm:flex items-center gap-6 text-sm">
-          <Link to="/games" className="text-gray-600 hover:text-gray-900">
+          <Link to="/Games" className="text-gray-600 hover:text-gray-900">
             Games
           </Link>
+          <Link to="/leaderboard" className="text-gray-600 hover:text-gray-900">
+            Leaderboard
+          </Link>
+          <Link to="/me/records" className="text-gray-600 hover:text-gray-900">
+            My Records
+          </Link>
+          {/* 로그인 시에만 Profile 노출 */}
+          {user && (
+            <Link to="/me/profile" className="text-gray-600 hover:text-gray-900">
+              Profile
+            </Link>
+          )}
           <a
             href="https://github.com/jjong-haya/jjminigames"
             className="text-gray-600 hover:text-gray-900"
