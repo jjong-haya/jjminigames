@@ -20,6 +20,7 @@ export const GAMES: GameMeta[] = [
     id: 'tap',
     title: '⚡ Tap Reflex',
     desc: '반응속도 측정(예정).',
-    status: 'soon'
+    status: 'ready',
+    href: '/games/reaction'
   },
 ];
