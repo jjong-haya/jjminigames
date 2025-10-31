@@ -1,0 +1,13 @@
+{
+    "indexes": [
+      {
+        "collectionGroup": "reaction_results",
+        "queryScope": "COLLECTION",
+        "fields": [
+          { "fieldPath": "userId", "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+        ]
+      }
+    ],
+    "fieldOverrides": []
+  }

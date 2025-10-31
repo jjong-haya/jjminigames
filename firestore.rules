@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /profiles/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /reaction_results/{docId} {
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.ms is int
+                    && request.resource.data.createdAt is timestamp;
+      allow read: if request.auth != null
+                  && resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+     match /user_bests/{userId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.userId == userId
+                    && request.resource.data.best_ms is int
+                    && request.resource.data.username is string;
+
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.userId == userId
+                    && request.resource.data.username is string
+                    && (
+                      // ① username만 바뀌는 경우 허용 (updatedAt 같이 바뀌어도 허용)
+                      request.resource.data.diff(resource.data).changedKeys()
+                        .hasOnly(['username', 'updatedAt'])
+                      ||
+                      // ② best_ms가 개선(작아짐/동일)되는 경우 허용
+                      (request.resource.data.best_ms is int
+                        && resource.data.best_ms is int
+                        && request.resource.data.best_ms <= resource.data.best_ms)
+                    );
+
+      allow delete: if false;
+    }
+
+    // ✅ public_results: 본인 문서는 'username'만 변경 허용
+    match /public_results/{docId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.ms is int
+                    && request.resource.data.username is string
+                    && request.resource.data.createdAt is timestamp;
+
+      // username 외 다른 필드는 못 바꿈(덮어쓰기 방지)
+      allow update: if request.auth != null
+                    && request.auth.uid == resource.data.userId
+                    && request.resource.data.diff(resource.data).changedKeys()
+                         .hasOnly(['username']);
+
+      allow delete: if false;
+    }
+  }
+}
