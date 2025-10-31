@@ -19,5 +19,9 @@ export const googleProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 export const analyticsPromise = typeof window !== 'undefined' &&
         window.isSecureContext && firebaseConfig.measurementId ?
-    analyticsSupported().then(ok => (ok ? getAnalytics(app) : null)) :
+    analyticsSupported().then(
+        (ok: boolean) => (ok ? getAnalytics(app) : null))  // ← 타입만 명시
+    :
     Promise.resolve(null);
+
+export {app};  // (옵션) 필요하면 노출
